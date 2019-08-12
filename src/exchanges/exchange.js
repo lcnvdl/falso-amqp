@@ -32,7 +32,7 @@ class Exchange {
         }
     }
 
-    publish(message, specificQueue) {
+    publish(message, routingKey, options) {
         throw new Error("Abstract method");
     }
 }

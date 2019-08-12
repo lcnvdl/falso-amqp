@@ -12,6 +12,25 @@ class Channel {
      */
     attachExchange(exchange) {
     }
+
+    /**
+     * Attachs a queue
+     * @param {Queue} queue Queue
+     */
+    attachQueue(queue) {
+    }
+
+    /**
+     * Binds a queue.
+     * @param {string} queueName Queue name
+     * @param {string} exchangeName Exchange name
+     * @param {string} routingKey Routing Key
+     */
+    bindQueue(queueName, exchangeName, routingKey) {
+    }
+
+    consume(queueName, callback, options) {
+    }
 }
 
 module.exports = Channel;
