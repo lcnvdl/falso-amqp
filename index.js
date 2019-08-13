@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const colog = require("colog");
 const process = require("process");
 

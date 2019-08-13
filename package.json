@@ -1,6 +1,6 @@
 {
   "name": "falso-amqp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Falso AMQP",
   "main": "index.js",
   "preferGlobal": true,
