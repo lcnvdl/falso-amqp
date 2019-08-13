@@ -11,14 +11,23 @@ const Manager = require("./src/amqp/amqp-manager");
 
 const server = new SocketLayer();
 
-const args = process.argv.splice(2);
-
 let devMode = false;
 
-if (args.indexOf("--dev") !== -1) {
-    devMode = true;
+const args = process.argv.splice(2);
 
-    colog.log(colog.bgBlack(colog.colorGreen("DEV MODE")));
+for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+
+    if (arg === "--dev") {
+        devMode = true;
+        colog.log(colog.bgBlack(colog.colorGreen("DEV MODE")));
+    }
+    else if (arg === "--port" || arg === "-p") {
+        settings.port = +args[++i];
+    }
+    else if (arg === "--process-queue-interval" || arg === "-pqi") {
+        settings.processQueueInterval = +args[++i];
+    }
 }
 
 server.serve(settings.port).then(() => {
