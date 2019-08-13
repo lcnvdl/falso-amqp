@@ -3,7 +3,8 @@ const process = require("process");
 
 const settings = require("./settings.json");
 
-const SocketLayer = require("./src/sockets/socket-ws.layer");
+const SocketLayer = require("./src/sockets/socket-io.layer");
+//const SocketLayer = require("./src/sockets/socket-ws.layer");
 
 const Protocol = require("./src/protocols/protocol-v1");
 
@@ -42,8 +43,13 @@ server.serve(settings.port).then(() => {
                     channel = manager.createChannel(connection);
                     let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
+                    return;
                 }
-                else if (cmd === "prefetch" || cmd === "pf") {
+                else if (!channel) {
+                    throw new Error("Invalid channel");
+                }
+
+                if (cmd === "prefetch" || cmd === "pf") {
                     const { number } = data;
                     logChannel(channel.id, `Prefetch ${number} channel`);
 
@@ -129,7 +135,9 @@ server.serve(settings.port).then(() => {
         });
 
         connection.onClose(() => {
-            manager.closeChannel(channel.id);
+            if (channel) {
+                manager.closeChannel(channel.id);
+            }
         });
     });
 
@@ -143,11 +151,12 @@ server.serve(settings.port).then(() => {
 
         manager.processQueues((channel, cmd, message) => {
             logChannel(channel.id, "Sending " + cmd + " to channel");
-            let messagePackage = Protocol.prepare(cmd, message.content);
-            channel.connection.send(messagePackage);
+            let messagePackage = Protocol.prepare(cmd, message);
+            channel.client.send(messagePackage);
+            return Promise.resolve();
         });
 
-        processQueueTimer = setTimeout(() => processQueue(), settings.processQueueInterval);
+        processQueueTimer = setTimeout(() => processQueue(), settings.processQueueInterval || 1000);
     }
 
     setTimeout(() => processQueue(), settings.processQueueInterval);

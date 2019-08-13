@@ -74,9 +74,13 @@ class Queue {
         }
 
         let channels = allChannels
-            .filter(m => m.isConsummingQueue(this.name));
+            .filter(m => m.isConsumming(this.name));
 
-        if (this._rr > channels.length) {
+        if (channels.length === 0) {
+            return;
+        }
+
+        if (this._rr >= channels.length) {
             this._rr = 0;
         }
 

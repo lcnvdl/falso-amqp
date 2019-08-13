@@ -51,7 +51,7 @@ class AmqpManager {
         message.initialize(messageContent, settings || {});
 
         const channels = this.allChannels.filter(c => c.hasExchange(exchangeName));
-        const relationships = channels.map(channel => channel.getExchangeRelationships(exchangeName));
+        const relationships = channels.map(channel => channel.getExchangeRelationships(exchangeName)).reduce((a, b) => a.concat(b));
 
         this.exchanges[exchangeName].publish(message, routingKey, relationships);
     }
@@ -62,20 +62,20 @@ class AmqpManager {
         this.allQueues.forEach(queue => {
             let messages = queue.process(allChannels).filter(m => m.isPending);
 
-            messages.forEach(message => {
-                const channel = this.channels[message.deliverTo];
+            messages.forEach(queueMessage => {
+                const channel = this.channels[queueMessage.deliverTo];
                 if (!channel) {
-                    message.setError();
+                    queueMessage.setError();
                 }
                 else {
-                    message.send();
+                    queueMessage.send();
                     sendMessageToChannel(channel, "from-queue", {
                         queue: queue.name,
-                        content: message.content
+                        content: queueMessage.message.content
                     }).then(() => {
-                        message.finish();
+                        queueMessage.finish();
                     }, err => {
-                        message.setError();
+                        queueMessage.setError();
                     });
                 }
             });
@@ -100,7 +100,6 @@ class AmqpManager {
 
     closeChannel(id) {
         this.channels[id].queues
-            .map(name => this.queues[name])
             .filter(queue => queue.exclusive && queue.creator === id)
             .forEach(exclusiveQueue => this.destroyQueue(exclusiveQueue.name));
 

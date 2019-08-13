@@ -25,8 +25,8 @@ class Channel {
      * @param {Exchange} exchange Exchange
      */
     attachExchange(exchange) {
-        if (this.exchanges.indexOf(exchange.name) === -1) {
-            this.exchanges.push(exchange.name);
+        if (!this.exchanges.some(m => m.name === exchange.name)) {
+            this.exchanges.push(exchange);
         }
     }
 
@@ -35,8 +35,8 @@ class Channel {
      * @param {Queue} queue Queue
      */
     attachQueue(queue) {
-        if (this.queues.indexOf(queue.name) === -1) {
-            this.queues.push(queue.name);
+        if (!this.queues.some(m => m.name === queue.name)) {
+            this.queues.push(queue);
         }
     }
 
@@ -48,6 +48,9 @@ class Channel {
      */
     bindQueue(queueName, exchangeName, routingKey) {
         let queue = this.queues.find(m => m.name === queueName);
+        if (!queue) {
+            throw new Error("Queue not found in channel");
+        }
 
         if (!this.relationships.some(r =>
             r.queueName === queueName &&

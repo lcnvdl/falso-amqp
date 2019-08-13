@@ -2,8 +2,7 @@
     "port": 8789,
     "sockets": {
         "ws": {
-
         }
     },
-    "processQueuesInterval": 1000
+    "processQueueInterval": 1000
 }
