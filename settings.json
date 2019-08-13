@@ -1,8 +1,7 @@
 {
-    "port": 8789,
+    "port": 5682,
     "sockets": {
-        "ws": {
-        }
+        "layer": "io"
     },
     "processQueueInterval": 1000
 }

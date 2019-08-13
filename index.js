@@ -3,8 +3,7 @@ const process = require("process");
 
 const settings = require("./settings.json");
 
-const SocketLayer = require("./src/sockets/socket-io.layer");
-//const SocketLayer = require("./src/sockets/socket-ws.layer");
+const SocketLayer = require("./src/sockets/socket-" + settings.sockets.layer + ".layer");
 
 const Protocol = require("./src/protocols/protocol-v1");
 
@@ -43,13 +42,14 @@ server.serve(settings.port).then(() => {
                     channel = manager.createChannel(connection);
                     let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
-                    return;
                 }
                 else if (!channel) {
-                    throw new Error("Invalid channel");
-                }
+                    colog.warning("Channel needed");
 
-                if (cmd === "prefetch" || cmd === "pf") {
+                    let reply = Protocol.prepare("need-channel", {});
+                    connection.send(reply);
+                }
+                else if (cmd === "prefetch" || cmd === "pf") {
                     const { number } = data;
                     logChannel(channel.id, `Prefetch ${number} channel`);
 
