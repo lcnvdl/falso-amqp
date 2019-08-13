@@ -15,7 +15,8 @@
     "chai": "^4.2.0"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "tests": "mocha --watch ./test"
   },
   "repository": {
     "type": "git",
