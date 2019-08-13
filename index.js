@@ -1,4 +1,5 @@
 const colog = require("colog");
+const process = require("process");
 
 const settings = require("./settings.json");
 
@@ -9,6 +10,16 @@ const Protocol = require("./src/protocols/protocol-v1");
 const Manager = require("./src/amqp/amqp-manager");
 
 const server = new SocketLayer();
+
+const args = process.argv.splice(2);
+
+let devMode = false;
+
+if (args.indexOf("--dev") !== -1) {
+    devMode = true;
+
+    colog.log(colog.bgBlack(colog.colorGreen("DEV MODE")));
+}
 
 server.serve(settings.port).then(() => {
 
@@ -29,7 +40,15 @@ server.serve(settings.port).then(() => {
                     colog.info("New channel");
 
                     channel = manager.createChannel(connection);
-                    let reply = protocol.prepare(cmd, true, msgID);
+                    let reply = Protocol.prepare(cmd, {}, msgID);
+                    connection.send(reply);
+                }
+                else if (cmd === "prefetch" || cmd === "pf") {
+                    const { number } = data;
+                    logChannel(channel.id, `Prefetch ${number} channel`);
+
+                    channel.prefetch = number;
+                    let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
                 }
                 else if (cmd === "assert-exchange" || cmd === "ae") {
@@ -37,7 +56,7 @@ server.serve(settings.port).then(() => {
                     logChannel(channel.id, `Assert exchange ${type} with name ${name}`);
 
                     manager.assertExchange(channel, name, type, settings);
-                    let reply = protocol.prepare(cmd, true, msgID);
+                    let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
                 }
                 else if (cmd === "assert-queue" || cmd === "aq") {
@@ -45,7 +64,7 @@ server.serve(settings.port).then(() => {
                     logChannel(channel.id, `Assert queue ${name}`);
 
                     manager.assertQueue(channel, name, settings);
-                    let reply = protocol.prepare(cmd, true, msgID);
+                    let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
                 }
                 else if (cmd === "bind-queue" || cmd === "bq") {
@@ -53,7 +72,7 @@ server.serve(settings.port).then(() => {
                     logChannel(channel.id, `Bind queue ${queueName} with exchange ${exchangeName} using RK ${routingKey}`);
 
                     channel.bindQueue(queueName, exchangeName, routingKey);
-                    let reply = protocol.prepare(cmd, true, msgID);
+                    let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
                 }
                 else if (cmd === "publish" || cmd === "p") {
@@ -61,7 +80,15 @@ server.serve(settings.port).then(() => {
                     logChannel(channel.id, `Publish message in exchange ${exchangeName} using RK ${routingKey}`);
 
                     manager.publish(exchangeName, routingKey, content, settings);
-                    let reply = protocol.prepare(cmd, true, msgID);
+                    let reply = Protocol.prepare(cmd, {}, msgID);
+                    connection.send(reply);
+                }
+                else if (cmd === "consume" || cmd == "cn") {
+                    const { queueName, settings } = data;
+                    logChannel(channel.id, `Consume queue ${queueName}`);
+
+                    channel.consume(queueName, settings);
+                    let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
                 }
                 else if (cmd === "send-to-queue" || cmd === "sq") {
@@ -69,13 +96,35 @@ server.serve(settings.port).then(() => {
                     logChannel(channel.id, `Send message to queue ${queueName}`);
 
                     manager.sendToQueue(queueName, content, settings);
-                    let reply = protocol.prepare(cmd, true, msgID);
+                    let reply = Protocol.prepare(cmd, {}, msgID);
                     connection.send(reply);
                 }
             }
             catch (err) {
-                connection.send(err);
+
+                let reply;
+
+                if (typeof err === 'string') {
+                    reply = Protocol.prepare("error", {
+                        message: err,
+                        object: {},
+                        stack: ""
+                    });
+                }
+                else {
+                    reply = Protocol.prepare("error", {
+                        message: "" + err,
+                        object: err,
+                        stack: err.stack
+                    });
+                }
+
+                connection.send(reply);
                 colog.error(err);
+
+                if (devMode) {
+                    throw err;
+                }
             }
         });
 
@@ -84,6 +133,24 @@ server.serve(settings.port).then(() => {
         });
     });
 
+    let processQueueTimer = 0;
+
+    function processQueue() {
+        if (processQueueTimer) {
+            clearTimeout(processQueueTimer);
+            processQueueTimer = 0;
+        }
+
+        manager.processQueues((channel, cmd, message) => {
+            logChannel(channel.id, "Sending " + cmd + " to channel");
+            let messagePackage = Protocol.prepare(cmd, message.content);
+            channel.connection.send(messagePackage);
+        });
+
+        processQueueTimer = setTimeout(() => processQueue(), settings.processQueueInterval);
+    }
+
+    setTimeout(() => processQueue(), settings.processQueueInterval);
 }, err => {
     colog.error(err);
 });

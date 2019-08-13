@@ -13,11 +13,11 @@ class AmqpManager {
     }
 
     get allQueues() {
-        return Object.values(queues);
+        return Object.values(this.queues);
     }
 
     get allChannels() {
-        return Object.values(channels);
+        return Object.values(this.channels);
     }
 
     assertExchange(channel, name, type, settings) {
@@ -54,6 +54,32 @@ class AmqpManager {
         const relationships = channels.map(channel => channel.getExchangeRelationships(exchangeName));
 
         this.exchanges[exchangeName].publish(message, routingKey, relationships);
+    }
+
+    processQueues(sendMessageToChannel) {
+        const allChannels = this.allChannels;
+
+        this.allQueues.forEach(queue => {
+            let messages = queue.process(allChannels).filter(m => m.isPending);
+
+            messages.forEach(message => {
+                const channel = this.channels[message.deliverTo];
+                if (!channel) {
+                    message.setError();
+                }
+                else {
+                    message.send();
+                    sendMessageToChannel(channel, "from-queue", {
+                        queue: queue.name,
+                        content: message.content
+                    }).then(() => {
+                        message.finish();
+                    }, err => {
+                        message.setError();
+                    });
+                }
+            });
+        });
     }
 
     sendToQueue(channel, queueName, messageContent, settings) {

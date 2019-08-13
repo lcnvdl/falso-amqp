@@ -32,9 +32,9 @@ class SocketLayer {
 
     triggerOnConnection(connection) {
         this.connections[connection.id] = connection;
-        connection.onClose(() => delete connections[connection.id]);
+        connection.onClose(() => delete this.connections[connection.id]);
 
-        this.events.trigger("connection", connection);
+        this.events.emit("connection", connection);
     }
 
     onConnection(callback) {

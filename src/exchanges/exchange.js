@@ -23,6 +23,8 @@ class Exchange {
     initialize(name, settings) {
         this.name = name;
 
+        settings = settings || {};
+
         if (typeof settings.durability !== 'undefined') {
             this.durability = settings.durability;
         }
@@ -38,6 +40,10 @@ class Exchange {
 
     publish(message, routingKey, relationships) {
         throw new Error("Abstract method");
+    }
+
+    validate() {
+        //  TODO    Asegurar coherencia de exchange
     }
 }
 

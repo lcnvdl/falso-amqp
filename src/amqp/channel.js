@@ -8,6 +8,7 @@ class Channel {
         this.relationships = [];
         this.queues = [];
         this.exchanges = [];
+        this.consuming = {};
     }
 
     /**
@@ -60,7 +61,14 @@ class Channel {
         return this.relationships.filter(m => m.exchangeName === name);
     }
 
-    consume(queueName, callback, options) {
+    isConsumming(queue) {
+        return !!this.consuming[queue];
+    }
+
+    consume(queueName, settings) {
+        this.consuming[queueName] = {
+            settings
+        };
     }
 }
 

@@ -4,5 +4,6 @@
         "ws": {
 
         }
-    }
+    },
+    "processQueuesInterval": 1000
 }

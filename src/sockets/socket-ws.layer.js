@@ -19,7 +19,7 @@ class WsSocketLayer extends SocketLayer {
         this.server.on("connection", client => {
 
             let connection = new SocketConnection(this.server, client);
-            this.events.triggerOnConnection(connection);
+            this.triggerOnConnection(connection);
 
             client.on("message", msg => {
                 connection.triggerOnMessage(msg);

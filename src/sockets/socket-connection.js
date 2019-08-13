@@ -10,11 +10,11 @@ class SocketConnection {
     }
 
     triggerOnMessage(msg) {
-        this.events.trigger("message", msg);
+        this.events.emit("message", msg);
     }
 
     triggerOnClose() {
-        this.events.trigger("close", this);
+        this.events.emit("close", this);
     }
 
     send(message) {
