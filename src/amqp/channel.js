@@ -4,6 +4,19 @@ class Channel {
     constructor(client) {
         this.id = uuid();
         this.client = client;
+        this.prefetch = 0;
+        this.relationships = [];
+        this.queues = [];
+        this.exchanges = [];
+    }
+
+    /**
+     * True if it has a binded exchange
+     * @param {string} name Exchange name
+     * @returns {boolean} True if it has a binded exchange 
+     */
+    hasExchange(name) {
+        return this.relationships.some(m => m.exchangeName === name);
     }
 
     /**
@@ -11,6 +24,9 @@ class Channel {
      * @param {Exchange} exchange Exchange
      */
     attachExchange(exchange) {
+        if (this.exchanges.indexOf(exchange.name) === -1) {
+            this.exchanges.push(exchange.name);
+        }
     }
 
     /**
@@ -18,6 +34,9 @@ class Channel {
      * @param {Queue} queue Queue
      */
     attachQueue(queue) {
+        if (this.queues.indexOf(queue.name) === -1) {
+            this.queues.push(queue.name);
+        }
     }
 
     /**
@@ -27,6 +46,18 @@ class Channel {
      * @param {string} routingKey Routing Key
      */
     bindQueue(queueName, exchangeName, routingKey) {
+        let queue = this.queues.find(m => m.name === queueName);
+
+        if (!this.relationships.some(r =>
+            r.queueName === queueName &&
+            r.exchangeName === exchangeName &&
+            r.routingKey === routingKey)) {
+            this.relationships.push({ queueName, exchangeName, routingKey, queue });
+        }
+    }
+
+    getExchangeRelationships(name) {
+        return this.relationships.filter(m => m.exchangeName === name);
     }
 
     consume(queueName, callback, options) {

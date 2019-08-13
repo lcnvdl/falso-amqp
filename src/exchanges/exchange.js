@@ -16,6 +16,10 @@ class Exchange {
         throw new Error("Abstract property");
     }
 
+    /*get isDefault() {
+        return this.name === "" && this.type === "direct";
+    }*/
+
     initialize(name, settings) {
         this.name = name;
 
@@ -32,7 +36,7 @@ class Exchange {
         }
     }
 
-    publish(message, routingKey, options) {
+    publish(message, routingKey, relationships) {
         throw new Error("Abstract method");
     }
 }
