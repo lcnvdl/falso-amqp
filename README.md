@@ -30,7 +30,12 @@ falso-amqp
 ```bash
 npm i falso-amqp --save
 ```
-2. TODO
+2. Require
+```javascript
+const runServer = require("falso-amqp");
+
+runServer();
+```
 
 ## Client Library
 

@@ -1,11 +1,11 @@
 {
   "name": "falso-amqp",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Falso AMQP",
   "main": "index.js",
   "preferGlobal": true,
   "bin": {
-    "falso-amqp": "./index.js"
+    "falso-amqp": "./server.js"
   },
   "directories": {
     "test": "test"
