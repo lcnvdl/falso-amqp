@@ -116,6 +116,10 @@ function runServer() {
                         let reply = Protocol.prepare(cmd, {}, msgID);
                         connection.send(reply);
                     }
+                    else if (cmd === "ping") {
+                        let reply = Protocol.prepare("pong", {});
+                        connection.send(reply);
+                    }
                 }
                 catch (err) {
 
