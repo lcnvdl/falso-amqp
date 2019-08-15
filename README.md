@@ -52,6 +52,10 @@ The objetive of the Client library is to be compatible with Rabbit MQ.
 
 # Compatibility
 
+Features based on amqplib channel api
+- [Channel API](https://www.squaremobius.net/amqp.node/channel_api.html)
+- [amqplib](https://github.com/squaremo/amqp.node)
+
 | Function                         |  Status  |
 |----------------------------------|----------|
 |connect                           |    OK    |
