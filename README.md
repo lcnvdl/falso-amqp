@@ -1,6 +1,9 @@
 # falso-amqp
 Falso AMQP
 
+[![NPM Version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+
 ## History
 I was working with microservices in Node JS. The MS nodes were connected using RabbitMQ. My life was happy, until I've tried to deploy my project to azure.
 That was when I realize that the thing is was not so easy.
@@ -48,7 +51,7 @@ npm i falso-amqp-client --save
 The objetive of the Client library is to be compatible with Rabbit MQ.
 
 
-
-
-
-
+[npm-image]: https://img.shields.io/npm/v/falso-amqp.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/falso-amqp
+[travis-image]: https://img.shields.io/travis/lcnvdl/falso-amqp/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/lcnvdl/falso-amqp
