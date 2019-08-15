@@ -4,7 +4,7 @@ Falso AMQP
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 
-## History
+# History
 I was working with microservices in Node JS. The MS nodes were connected using RabbitMQ. My life was happy, until I've tried to deploy my project to azure.
 That was when I realize that the thing is was not so easy.
 
@@ -16,7 +16,7 @@ I just wanted a simpler think: deploy my microservices into an "app service" res
 
 So, I decided to implement a AMQP-Like NodeJS Server and Client (library).
 
-## Getting started
+# Getting started
 
 You have two ways to implement the server.
 
@@ -40,7 +40,7 @@ const runServer = require("falso-amqp");
 runServer();
 ```
 
-## Client Library
+# Client Library
 
 ```bash
 npm i falso-amqp-client --save
@@ -49,6 +49,48 @@ npm i falso-amqp-client --save
 [Falso AMQP Client](https://github.com/lcnvdl/falso-amqp-client)
 
 The objetive of the Client library is to be compatible with Rabbit MQ.
+
+# Compatibility
+
+| Function                         |  Status  |
+|----------------------------------|----------|
+|connect                           |    OK    |
+|**ChannelModel and CallbackModel**|          |
+|connection.close                  |    OK    |
+|events                            |          |
+|connection.createChannel          |    OK    |
+|connection.createConfirmChannel   |          |
+|**Channel**                       |          |
+|channel.close                     |          |
+|events                            |          |
+|channel.assertQueue               |    OK    |
+|channel.checkQueue                |          |
+|channel.deleteQueue               |          |
+|channel.purgeQueue                |          |
+|channel.bindQueue                 |    OK    |
+|channel.unbindQueue               |          |
+|channel.assertExchange            |    OK    |
+|channel.checkExchange             |          |
+|channel.deleteExchange            |          |
+|channel.bindExchange              |          |
+|channel.unbindExchange            |          |
+|channel.publish                   |    OK    |
+|channel.sendToQueue               |    OK    |
+|channel.consume                   |    OK    |
+|channel.cancel                    |          |
+|channel.get                       |          |
+|channel.ack                       |          |
+|channel.ackAll                    |          |
+|channel.nack                      |          |
+|channel.nackAll                   |          |
+|channel.reject                    |          |
+|channel.prefetch                  |          |
+|channel.recover                   |          |
+|**ConfirmChannel**                |          |
+|confirmChannel.publish            |          |
+|confirmChannel.sendToQueue        |          |
+|confirmChannel.waitForConfirms    |          |
+
 
 
 [npm-image]: https://img.shields.io/npm/v/falso-amqp.svg?style=flat-square
