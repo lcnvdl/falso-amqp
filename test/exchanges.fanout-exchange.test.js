@@ -3,9 +3,10 @@ const { expect } = require("chai");
 const FanoutExchange = require("../src/exchanges/fanout.exchange");
 
 describe("FanoutExchange", () => {
-    describe("constructor", () => {
-        it("should work fine", () => {
-            expect(new FanoutExchange()).to.be.ok;
+    describe("instance", () => {
+        it("type should be fine", () => {
+            let instance = new FanoutExchange();
+            expect(instance.type).to.equals("fanout");
         });
     });
 });
