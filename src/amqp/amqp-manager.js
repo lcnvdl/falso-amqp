@@ -20,6 +20,20 @@ class AmqpManager {
         return Object.values(this.channels);
     }
 
+    assertDefaultExchange(channel, settings) {
+        const name = "";
+        const type = "direct";
+
+        if (this.exchanges[name]) {
+            this.exchanges[name].validate(type, settings);
+        }
+        else {
+            this._createExchange(name, type, settings);
+        }
+
+        channel.attachExchange(this.exchanges[name]);
+    }
+
     assertExchange(channel, name, type, settings) {
         if (!name || name === "") {
             throw new Error("Exchanges must have a name");
@@ -100,7 +114,7 @@ class AmqpManager {
     }
 
     sendToQueue(channel, queueName, messageContent, settings) {
-        this.assertExchange(channel, "", "direct", {});
+        this.assertDefaultExchange(channel, {});
         channel.bindQueue(queueName, "", queueName);
         this.publish("", queueName, messageContent, settings);
     }
