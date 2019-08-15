@@ -80,8 +80,11 @@ function runServer() {
                         const { name, settings } = data;
                         logChannel(channel.id, `Assert queue ${name}`);
 
-                        manager.assertQueue(channel, name, settings);
-                        let reply = Protocol.prepare(cmd, {}, msgID);
+                        let finalName = manager.assertQueue(channel, name, settings);
+                        let status = manager.getQueueStatus(finalName);
+
+                        let reply = Protocol.prepare(cmd, status, msgID);
+
                         connection.send(reply);
                     }
                     else if (cmd === "bind-queue" || cmd === "bq") {

@@ -1,6 +1,6 @@
 {
   "name": "falso-amqp",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Falso AMQP",
   "main": "index.js",
   "preferGlobal": true,
@@ -20,8 +20,9 @@
     "chai": "^4.2.0"
   },
   "scripts": {
+    "serve": "node server.js",
     "test": "mocha",
-    "tests": "mocha --watch ./test"
+    "tests": "mocha --watch --recursive"
   },
   "repository": {
     "type": "git",

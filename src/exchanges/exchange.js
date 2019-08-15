@@ -42,7 +42,11 @@ class Exchange {
         throw new Error("Abstract method");
     }
 
-    validate() {
+    validate(type, settings) {
+        if (this.type !== type) {
+            throw new Error("Invalid exchange type");
+        }
+
         //  TODO    Asegurar coherencia de exchange
     }
 }

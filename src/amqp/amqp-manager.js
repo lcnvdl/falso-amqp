@@ -21,6 +21,10 @@ class AmqpManager {
     }
 
     assertExchange(channel, name, type, settings) {
+        if (!name || name === "") {
+            throw new Error("Exchanges must have a name");
+        }
+
         if (this.exchanges[name]) {
             this.exchanges[name].validate(type, settings);
         }
@@ -32,7 +36,7 @@ class AmqpManager {
     }
 
     assertQueue(channel, name, settings) {
-        if (name === "") {
+        if (!name || name === "") {
             name = "amq.get-" + uuid();
         }
 
@@ -44,6 +48,18 @@ class AmqpManager {
         }
 
         channel.attachQueue(this.queues[name]);
+
+        return name;
+    }
+
+    getQueueStatus(name) {
+        let queue = this.queues[name]
+
+        return {
+            queue: name,
+            messageCount: queue.countMessages,
+            consumerCount: this.allChannels.filter(m => m.isConsumming(name)).length
+        };
     }
 
     publish(exchangeName, routingKey, messageContent, settings) {
@@ -52,7 +68,7 @@ class AmqpManager {
 
         const channels = this.allChannels.filter(c => c.hasExchange(exchangeName));
         const allChannelsRelationships = channels.map(channel => channel.getExchangeRelationships(exchangeName));
-        const relationships = allChannelsRelationships.length > 0 ? allChannelsRelationships.reduce((a, b) => a.concat(b)) : 0;
+        const relationships = (allChannelsRelationships.length > 0) ? allChannelsRelationships.reduce((a, b) => a.concat(b)) : [];
 
         this.exchanges[exchangeName].publish(message, routingKey, relationships);
     }
