@@ -3,6 +3,8 @@ Falso AMQP
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
+[![codecov][codecov-image]][codecov-url]
+[![Known Vulnerabilities][snyk-image]][snyk-url]
 
 # History
 I was working with microservices in Node JS. The MS nodes were connected using RabbitMQ. My life was happy, until I've tried to deploy my project to azure.
@@ -101,3 +103,7 @@ Features based on amqplib channel api
 [npm-url]: https://npmjs.org/package/falso-amqp
 [travis-image]: https://img.shields.io/travis/lcnvdl/falso-amqp/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/lcnvdl/falso-amqp
+[codecov-image]: https://codecov.io/gh/lcnvdl/falso-amqp/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/lcnvdl/falso-amqp
+[snyk-image]: https://snyk.io/test/github/lcnvdl/falso-amqp/badge.svg
+[snyk-url]: https://snyk.io/test/github/lcnvdl/falso-amqp
