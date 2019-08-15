@@ -49,7 +49,7 @@ class Channel {
     bindQueue(queueName, exchangeName, routingKey) {
         let queue = this.queues.find(m => m.name === queueName);
         if (!queue) {
-            throw new Error("Queue not found in channel");
+            throw new Error(`Queue ${queueName} not found in channel ${this.id}`);
         }
 
         if (!this.relationships.some(r =>

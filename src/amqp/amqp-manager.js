@@ -51,7 +51,8 @@ class AmqpManager {
         message.initialize(messageContent, settings || {});
 
         const channels = this.allChannels.filter(c => c.hasExchange(exchangeName));
-        const relationships = channels.map(channel => channel.getExchangeRelationships(exchangeName)).reduce((a, b) => a.concat(b));
+        const allChannelsRelationships = channels.map(channel => channel.getExchangeRelationships(exchangeName));
+        const relationships = allChannelsRelationships.length > 0 ? allChannelsRelationships.reduce((a, b) => a.concat(b)) : 0;
 
         this.exchanges[exchangeName].publish(message, routingKey, relationships);
     }

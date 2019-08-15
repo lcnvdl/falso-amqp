@@ -112,7 +112,7 @@ function runServer() {
                         const { queueName, content, settings } = data;
                         logChannel(channel.id, `Send message to queue ${queueName}`);
 
-                        manager.sendToQueue(queueName, content, settings);
+                        manager.sendToQueue(channel, queueName, content, settings);
                         let reply = Protocol.prepare(cmd, {}, msgID);
                         connection.send(reply);
                     }
