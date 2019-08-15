@@ -30,6 +30,12 @@ function runServer() {
         else if (arg === "--process-queue-interval" || arg === "-pqi") {
             settings.processQueueInterval = +args[++i];
         }
+        else if (arg === "--version" || arg === "-v") {
+            logo();
+            colog.success("Version " + require("./package.json").version);
+            colog.log(" ");
+            return;
+        }
     }
 
     server.serve(settings.port).then(() => {
