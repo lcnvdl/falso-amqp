@@ -17,7 +17,7 @@ class SocketConnection {
         this.events.emit("close", this);
     }
 
-    send(message) {
+    send(_message) {
         throw new Error("Abstract method");
     }
 
@@ -31,6 +31,10 @@ class SocketConnection {
 
     onClose(callback) {
         this.events.on("close", callback);
+    }
+
+    close() {
+        throw new Error("Abstract method");
     }
 }
 

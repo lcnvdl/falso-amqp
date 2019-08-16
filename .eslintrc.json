@@ -1,0 +1,56 @@
+{
+  "env": {
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "camelcase": "error",
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"],
+    "no-var": "error",
+    "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
+    "brace-style": ["error", "stroustrup"],
+    "curly": "error",
+    "no-unused-vars": ["warn", { "args": "none" }],
+    "require-await": "error",
+    "lines-between-class-members": [
+      "error",
+      "always",
+      { "exceptAfterSingleLine": true }
+    ],
+    "no-new-wrappers": "error",
+    "no-new-object": "error",
+    "quote-props": ["error", "consistent-as-needed"],
+    "no-restricted-syntax": [
+      "error",
+      "WithStatement",
+      "BinaryExpression[operator='in']"
+    ],
+    "one-var": ["error", "never"],
+    "no-multi-assign": "error",
+    "no-case-declarations": "error",
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error",
+    "no-mixed-operators": "error",
+    "no-else-return": "error",
+    "indent": ["error", 4, { "SwitchCase": 1, "ignoreComments": true }],
+    "no-multiple-empty-lines": "error",
+    "max-len": ["error", { "code": 200 }],
+    "comma-style": ["error", "last"],
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "directive", "next": "*" },
+      { "blankLine": "any", "prev": "directive", "next": "directive" }
+    ],
+    "yoda": "error",
+    "no-lonely-if": "error"
+  },
+  "globals": {
+    "use": true
+  }
+}

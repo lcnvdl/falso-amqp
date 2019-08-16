@@ -12,14 +12,14 @@ describe("ProtocolV1", () => {
     describe("prepare", () => {
         it("should give a compressed serialized message", () => {
             let expected = "b|dGVzdHx7ImF0dHJpYnV0ZSI6dHJ1ZX0=";
-            let result = ProtocolV1.prepare("test", {attribute: true});
+            let result = ProtocolV1.prepare("test", { attribute: true });
 
             expect(result).to.equals(expected);
         });
 
         it("should give a compressed serialized message with id", () => {
             let expected = "b|dGVzdDIsMTIzfHsiYXR0cmlidXRlIjoxfQ==";
-            let result = ProtocolV1.prepare("test2", {attribute: 1}, 123);
+            let result = ProtocolV1.prepare("test2", { attribute: 1 }, 123);
 
             expect(result).to.equals(expected);
         });

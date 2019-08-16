@@ -1,6 +1,6 @@
 const SocketLayer = require("./socket-layer");
 const SocketConnection = require("./socket-io.connection");
-const createServer = require('socket.io');
+const createServer = require("socket.io");
 
 class IOSocketLayer extends SocketLayer {
 

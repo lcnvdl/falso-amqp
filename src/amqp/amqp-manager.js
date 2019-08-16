@@ -67,7 +67,7 @@ class AmqpManager {
     }
 
     getQueueStatus(name) {
-        let queue = this.queues[name]
+        let queue = this.queues[name];
 
         return {
             queue: name,
@@ -133,6 +133,13 @@ class AmqpManager {
         this.channels[id].queues
             .filter(queue => queue.exclusive && queue.creator === id)
             .forEach(exclusiveQueue => this.destroyQueue(exclusiveQueue.name));
+
+        try {
+            this.channels[id].close();
+        }
+        catch (err) {
+            console.warn(err);
+        }
 
         delete this.channels[id];
     }

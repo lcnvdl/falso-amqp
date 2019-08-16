@@ -9,4 +9,4 @@ module.exports = {
         instance.initialize(name, settings);
         return instance;
     }
-}
+};

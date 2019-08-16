@@ -25,15 +25,15 @@ class Exchange {
 
         settings = settings || {};
 
-        if (typeof settings.durability !== 'undefined') {
+        if (typeof settings.durability !== "undefined") {
             this.durability = settings.durability;
         }
 
-        if (typeof settings.arguments !== 'undefined') {
+        if (typeof settings.arguments !== "undefined") {
             this.arguments = settings.arguments;
         }
 
-        if (typeof settings.autoDelete !== 'undefined') {
+        if (typeof settings.autoDelete !== "undefined") {
             this.autoDelete = settings.autoDelete;
         }
     }

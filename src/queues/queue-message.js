@@ -29,7 +29,7 @@ class QueueMessage {
     }
 
     get shouldBeDestroyed() {
-        return this.isFinished || (this.isError && !this.canRetry)
+        return this.isFinished || (this.isError && !this.canRetry);
     }
 
     get canRetry() {

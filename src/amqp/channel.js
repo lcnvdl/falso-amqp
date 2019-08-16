@@ -9,6 +9,7 @@ class Channel {
         this.queues = [];
         this.exchanges = [];
         this.consuming = {};
+        this.isClosed = false;
     }
 
     /**
@@ -72,6 +73,11 @@ class Channel {
         this.consuming[queueName] = {
             settings
         };
+    }
+
+    close() {
+        this.isClosed = true;
+        this.client.close();
     }
 }
 

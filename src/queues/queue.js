@@ -61,7 +61,7 @@ class Queue {
         finishedMessages.forEach(queueMsg => {
             if (queueMsg.isError && queueMsg.canRetry && queueMsg.timeAfterError > 1000) {
                 queueMsg.retries++;
-                this.enqueue(message);
+                this.enqueue(queueMsg.message);
             }
         });
 
