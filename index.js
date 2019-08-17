@@ -33,8 +33,6 @@ function runServer() {
         }
         else if (arg === "--version" || arg === "-v") {
             logo();
-            colog.success("Version " + require("./package.json").version);
-            colog.log(" ");
             return;
         }
     }
@@ -85,17 +83,19 @@ function runServer() {
                     else if (cmd === "publish" || cmd === "p") {
                         const { exchangeName, routingKey, content, settings } = data;
                         logChannel(controller.channel.id, `Publish message in exchange ${exchangeName} using RK ${routingKey}`);
-                        controller.publish(exchangeName, routingKey, content, settings, {cmd, msgID});
+                        controller.publish(exchangeName, routingKey, content, settings, { cmd, msgID });
+                        processQueue();
                     }
                     else if (cmd === "consume" || cmd == "cn") {
                         const { queueName, settings } = data;
                         logChannel(controller.channel.id, `Consume queue ${queueName}`);
-                        controller.consume(queueName, settings, {cmd, msgID});
+                        controller.consume(queueName, settings, { cmd, msgID });
                     }
                     else if (cmd === "send-to-queue" || cmd === "sq") {
                         const { queueName, content, settings } = data;
                         logChannel(controller.channel.id, `Send message to queue ${queueName}`);
                         controller.sendToQueue(queueName, content, settings);
+                        processQueue();
                     }
                     else if (cmd === "ping") {
                         controller.sendPong();
@@ -125,10 +125,15 @@ function runServer() {
             }
 
             manager.processQueues((channel, cmd, message) => {
-                logChannel(channel.id, "Sending " + cmd + " to channel");
-                let messagePackage = Protocol.prepare(cmd, message);
-                channel.client.send(messagePackage);
-                return Promise.resolve();
+                try {
+                    logChannel(channel.id, "Sending " + cmd + " to channel");
+                    let messagePackage = Protocol.prepare(cmd, message);
+                    channel.client.send(messagePackage);
+                    return Promise.resolve();
+                }
+                catch (err) {
+                    return Promise.reject(err);
+                }
             });
 
             processQueueTimer = setTimeout(() => processQueue(), settings.processQueueInterval || 1000);
@@ -151,6 +156,8 @@ function runServer() {
             colog.bgYellow("  ") +
             colog.bgWhite("AMQP     ")));
         colog.log(colog.colorCyan(colog.bgBlue(" lucianorasente.com ")));
+        colog.log(" ");
+        colog.log(colog.magenta("Version " + require("./package.json").version));
         colog.log(" ");
     }
 }
