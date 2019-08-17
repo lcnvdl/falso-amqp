@@ -94,7 +94,7 @@ function runServer() {
                     else if (cmd === "send-to-queue" || cmd === "sq") {
                         const { queueName, content, settings } = data;
                         logChannel(controller.channel.id, `Send message to queue ${queueName}`);
-                        controller.sendToQueue(queueName, content, settings);
+                        controller.sendToQueue(queueName, content, settings, { cmd, msgID });
                         processQueue();
                     }
                     else if (cmd === "ping") {
