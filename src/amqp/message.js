@@ -1,5 +1,8 @@
+const uuid = require("uuid/v1");
+
 class Message {
     constructor() {
+        this.id = uuid();
         this.date = new Date();
         this.content = "";
         this.persistent = false;

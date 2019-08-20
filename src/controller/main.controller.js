@@ -40,6 +40,16 @@ class MainController {
         this.success(cmd, msgID);
     }
 
+    ack(allUpTo, { cmd, msgID }) {
+        //  TODO    Implement ACK
+        this.sendWarning("Manual ACK: Feature not implemented yet");
+    }
+
+    nack(allUpTo, requeue, { cmd, msgID }) {
+        //  TODO    Implement ACK
+        this.sendWarning("Manual NACK: Feature not implemented yet");
+    }
+
     sendToQueue(queueName, content, settings, { cmd, msgID }) {
         this.manager.sendToQueue(this.channel, queueName, content, settings);
         this.success(cmd, msgID);
@@ -47,6 +57,10 @@ class MainController {
 
     sendPong() {
         this.send("pong");
+    }
+
+    sendWarning(message) {
+        this.send("warning", { message });
     }
 
     sendError(err) {

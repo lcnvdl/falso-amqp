@@ -58,44 +58,44 @@ Features based on amqplib channel api
 - [Channel API](https://www.squaremobius.net/amqp.node/channel_api.html)
 - [amqplib](https://github.com/squaremo/amqp.node)
 
-| Function                         |  Status  |
-|----------------------------------|----------|
-|connect                           |    OK    |
-|**ChannelModel and CallbackModel**|          |
-|connection.close                  |    OK    |
-|events                            |          |
-|connection.createChannel          |    OK    |
-|connection.createConfirmChannel   |          |
-|**Channel**                       |          |
-|channel.close                     |          |
-|events                            |          |
-|channel.assertQueue               |    OK    |
-|channel.checkQueue                |          |
-|channel.deleteQueue               |          |
-|channel.purgeQueue                |          |
-|channel.bindQueue                 |    OK    |
-|channel.unbindQueue               |          |
-|channel.assertExchange            |    OK    |
-|channel.checkExchange             |          |
-|channel.deleteExchange            |          |
-|channel.bindExchange              |          |
-|channel.unbindExchange            |          |
-|channel.publish                   |    OK    |
-|channel.sendToQueue               |    OK    |
-|channel.consume                   |    OK    |
-|channel.cancel                    |          |
-|channel.get                       |          |
-|channel.ack                       |          |
-|channel.ackAll                    |          |
-|channel.nack                      |          |
-|channel.nackAll                   |          |
-|channel.reject                    |          |
-|channel.prefetch                  |          |
-|channel.recover                   |          |
-|**ConfirmChannel**                |          |
-|confirmChannel.publish            |          |
-|confirmChannel.sendToQueue        |          |
-|confirmChannel.waitForConfirms    |          |
+| Function                         |   Status   |
+|----------------------------------|------------|
+|connect                           |     OK     |
+|**ChannelModel and CallbackModel**|            |
+|connection.close                  |     OK     |
+|events                            |            |
+|connection.createChannel          |     OK     |
+|connection.createConfirmChannel   |            |
+|**Channel**                       |            |
+|channel.close                     |            |
+|events                            |            |
+|channel.assertQueue               |     OK     |
+|channel.checkQueue                |            |
+|channel.deleteQueue               |            |
+|channel.purgeQueue                |            |
+|channel.bindQueue                 |     OK     |
+|channel.unbindQueue               |            |
+|channel.assertExchange            |     OK     |
+|channel.checkExchange             |            |
+|channel.deleteExchange            |            |
+|channel.bindExchange              |            |
+|channel.unbindExchange            |            |
+|channel.publish                   |     OK     |
+|channel.sendToQueue               |     OK     |
+|channel.consume                   |     OK     |
+|channel.cancel                    |            |
+|channel.get                       |            |
+|channel.ack                       |In progress |
+|channel.ackAll                    |            |
+|channel.nack                      |In progress |
+|channel.nackAll                   |            |
+|channel.reject                    |            |
+|channel.prefetch                  |In progress |
+|channel.recover                   |            |
+|**ConfirmChannel**                |            |
+|confirmChannel.publish            |            |
+|confirmChannel.sendToQueue        |            |
+|confirmChannel.waitForConfirms    |            |
 
 
 

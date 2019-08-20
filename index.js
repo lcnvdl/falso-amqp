@@ -4,7 +4,7 @@ const process = require("process");
 const settings = require("./settings.json");
 
 const SocketLayer = require("./src/sockets/socket-" + settings.sockets.layer + ".layer");
-
+const { logo, logChannel } = require("./src/helpers/ux.helper");
 const Protocol = require("./src/protocols/protocol-v1");
 
 const Manager = require("./src/amqp/amqp-manager");
@@ -91,6 +91,16 @@ function runServer() {
                         logChannel(controller.channel.id, `Consume queue ${queueName}`);
                         controller.consume(queueName, settings, { cmd, msgID });
                     }
+                    else if (cmd === "ack") {
+                        const { allUpTo = false } = data;
+                        logChannel(controller.channel.id, `ACK message ${msgID}`);
+                        controller.ack(allUpTo, { cmd, msgID });
+                    }
+                    else if (cmd === "nack") {
+                        const { allUpTo = false, requeue = true } = data;
+                        logChannel(controller.channel.id, `NACK message ${msgID}`);
+                        controller.nack(allUpTo, requeue, { cmd, msgID });
+                    }
                     else if (cmd === "send-to-queue" || cmd === "sq") {
                         const { queueName, content, settings } = data;
                         logChannel(controller.channel.id, `Send message to queue ${queueName}`);
@@ -143,23 +153,6 @@ function runServer() {
     }, err => {
         colog.error(err);
     });
-
-    function logChannel(id, message) {
-        colog.log(colog.colorGreen(id) + ": " + colog.colorWhite(message));
-    }
-
-    function logo() {
-        colog.log(" ");
-        colog.log(colog.bgBlue("                    "));
-        colog.log(colog.colorBlue(
-            colog.bgWhite("    FALSO") +
-            colog.bgYellow("  ") +
-            colog.bgWhite("AMQP     ")));
-        colog.log(colog.colorCyan(colog.bgBlue(" lucianorasente.com ")));
-        colog.log(" ");
-        colog.log(colog.magenta("Version " + require("./package.json").version));
-        colog.log(" ");
-    }
 }
 
 module.exports = runServer;
