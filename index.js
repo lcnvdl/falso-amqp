@@ -92,9 +92,9 @@ function runServer() {
                         controller.consume(queueName, settings, { cmd, msgID });
                     }
                     else if (cmd === "ack") {
-                        const { allUpTo = false } = data;
-                        logChannel(controller.channel.id, `ACK message ${msgID}`);
-                        controller.ack(allUpTo, { cmd, msgID });
+                        const { id, allUpTo = false } = data;
+                        logChannel(controller.channel.id, `ACK message ${id}`);
+                        controller.ack(allUpTo);
                     }
                     else if (cmd === "nack") {
                         const { allUpTo = false, requeue = true } = data;

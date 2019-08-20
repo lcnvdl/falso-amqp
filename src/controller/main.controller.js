@@ -40,12 +40,12 @@ class MainController {
         this.success(cmd, msgID);
     }
 
-    ack(allUpTo, { cmd, msgID }) {
+    ack(id, allUpTo) {
         //  TODO    Implement ACK
         this.sendWarning("Manual ACK: Feature not implemented yet");
     }
 
-    nack(allUpTo, requeue, { cmd, msgID }) {
+    nack(id, allUpTo, requeue) {
         //  TODO    Implement ACK
         this.sendWarning("Manual NACK: Feature not implemented yet");
     }
