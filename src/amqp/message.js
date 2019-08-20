@@ -8,11 +8,23 @@ class Message {
         this.persistent = false;
         this.retries = 0;
         this.maxRetries = 5;
+        this._relationship = null;
     }
 
     initialize(content, { persistent = false }) {
         this.content = content;
         this.persistent = persistent;
+    }
+
+    serialize() {
+        let obj = Object.assign({}, this);
+        Object.keys(obj).filter(m => m[0] === "_").forEach(m => delete obj[m]);
+        return obj;
+    }
+
+    deserialize(data) {
+        Object.assign(this, data);
+        return this;
     }
 }
 

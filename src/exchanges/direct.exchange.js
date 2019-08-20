@@ -12,7 +12,7 @@ class DirectExchange extends Exchange {
             const { queueName, routingKey, queue } = relationship;
 
             if (messageRoutingKey === routingKey && deliveredQueues.indexOf(queueName) === -1) {
-                queue.enqueue(message);
+                queue.enqueue(message, relationship);
                 deliveredQueues.push(queueName);
             }
         });

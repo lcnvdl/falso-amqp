@@ -17,8 +17,8 @@ class Queue {
         this.arguments = [];
 
         this._messages = [];
-
         this._messagesToDeliver = [];
+        this._messagesWaitingForACK = [];
 
         this._rr = 0;
 
@@ -42,11 +42,20 @@ class Queue {
     /**
      * Adds a message to the queue.
      * @param {Message} message Message
+     * @param {*} relationship Relationship
      */
-    enqueue(message) {
+    enqueue(message, relationship) {
+        if (!relationship) {
+            throw new Error("Relation is required");
+        }
+
+        message._relationship = relationship;
         this._messages.push(message);
     }
 
+    /**
+     * @returns {QueueMessage[]} Messages to deliver
+     */
     process(allChannels) {
         this._processPendingMessages(allChannels);
         this._processMessagesToDeliver();
@@ -61,7 +70,7 @@ class Queue {
         finishedMessages.forEach(queueMsg => {
             if (queueMsg.isError && queueMsg.canRetry && queueMsg.timeAfterError > 1000) {
                 queueMsg.retries++;
-                this.enqueue(queueMsg.message);
+                this.enqueue(queueMsg.message, queueMsg.relationship);
             }
         });
 
@@ -89,6 +98,7 @@ class Queue {
         let queueMsg = new QueueMessage();
         queueMsg.deliverTo = channels[this._rr].id;
         queueMsg.message = msg;
+        queueMsg.relationship = msg._relationship;
 
         this._rr++;
 
@@ -98,6 +108,8 @@ class Queue {
     serializeToPersist() {
         let data = Object.assign({}, this);
         data._messages = data._messages.filter(m => m.persistent);
+        data._messagesToDeliver = data._messagesToDeliver.filter(m => m.persistent);
+        data._messagesWaitingForACK = data._messagesWaitingForACK.filter(m => m.persistent);
         return data;
     }
 

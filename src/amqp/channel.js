@@ -1,3 +1,6 @@
+/** @typedef {import("../queues/queue")} Queue */
+/** @typedef {import("../exchanges/exchange")} Exchange */
+
 const uuid = require("uuid/v1");
 
 class Channel {
@@ -69,9 +72,14 @@ class Channel {
         return !!this.consuming[queue];
     }
 
-    consume(queueName, settings) {
+    /**
+     * @param {string} queueName Queue name
+     * @param {Object} obj Object
+     * @param {boolean} [noAck] No ACK
+     */
+    consume(queueName, { noAck = true }) {
         this.consuming[queueName] = {
-            settings
+            noAck
         };
     }
 

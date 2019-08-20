@@ -130,6 +130,10 @@ class AmqpManager {
     }
 
     closeChannel(id) {
+        if (!this.channels[id]) {
+            return;
+        }
+
         this.channels[id].queues
             .filter(queue => queue.exclusive && queue.creator === id)
             .forEach(exclusiveQueue => this.destroyQueue(exclusiveQueue.name));

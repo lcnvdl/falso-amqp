@@ -12,7 +12,7 @@ class FanoutExchange extends Exchange {
             const { queueName, queue } = relationship;
 
             if (deliveredQueues.indexOf(queueName) === -1) {
-                queue.enqueue(message);
+                queue.enqueue(message, relationship);
                 deliveredQueues.push(queueName);
             }
         });

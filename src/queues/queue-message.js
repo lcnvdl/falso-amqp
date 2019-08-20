@@ -5,6 +5,7 @@ class QueueMessage {
         this.deliverTo = null;
         this.status = 0;
         this.errorDate = null;
+        this.relationship = null;
     }
 
     get isPending() {

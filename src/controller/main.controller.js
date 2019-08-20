@@ -1,9 +1,19 @@
+/** @typedef {import("../amqp/channel")} Channel */
+/** @typedef {import("../amqp/amqp-manager")} Manager */
+
 class MainController {
+    /**
+     * @param {Object} obj An object.
+     * @param {Manager} obj.manager Manager
+     * @param {*} obj.connection Connection
+     * @param {*} obj.Protocol Protocol
+     */
     constructor({ manager, connection, Protocol }) {
         this.connection = connection;
         this.manager = manager;
-        this.channel = null;
         this.Protocol = Protocol;
+        /** @type {Channel} */
+        this.channel = null; 
     }
 
     get hasChannel() {
@@ -36,7 +46,7 @@ class MainController {
     }
 
     consume(queueName, settings, { cmd, msgID }) {
-        this.channel.consume(queueName, settings);
+        this.channel.consume(queueName, settings || {});
         this.success(cmd, msgID);
     }
 
