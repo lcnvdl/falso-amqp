@@ -102,7 +102,8 @@ class AmqpManager {
                     queueMessage.send();
                     sendMessageToChannel(channel, "from-queue", {
                         queue: queue.name,
-                        content: queueMessage.message.content
+                        content: queueMessage.message.content,
+                        properties: queueMessage.message.properties
                     }).then(() => {
                         queueMessage.finish();
                     }, err => {

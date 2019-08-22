@@ -8,6 +8,7 @@ class Message {
         this.persistent = false;
         this.retries = 0;
         this.maxRetries = 5;
+        this.properties = {};
         this._relationship = null;
     }
 
