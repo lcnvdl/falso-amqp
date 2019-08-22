@@ -12,9 +12,12 @@ class Message {
         this._relationship = null;
     }
 
-    initialize(content, { persistent = false }) {
+    initialize(content, settings) {
+        const { persistent = false } = settings;
+        
         this.content = content;
         this.persistent = persistent;
+        this.properties = settings;
     }
 
     serialize() {
