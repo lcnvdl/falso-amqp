@@ -1,24 +1,34 @@
+const QueueMessageStatus = require("./queue-message-status");
+
 class QueueMessage {
     constructor() {
         this.date = new Date();
         this.message = null;
         this.deliverTo = null;
-        this.status = 0;
+        this.status = QueueMessageStatus.None;
         this.errorDate = null;
         this.relationship = null;
     }
 
+    get needsAck() {
+        return !this.relationship.noAck;
+    }
+
     get isPending() {
-        return this.status === 0;
+        return this.status === QueueMessageStatus.None;
+    }
+
+    get isWaitingACK() {
+        return this.status === QueueMessageStatus.WaitingACK;
     }
 
     get isFinished() {
-        return this.status === 2;
+        return this.status === QueueMessageStatus.Finished;
     }
 
     get isError() {
         this.errorDate = new Date();
-        return this.status === 3;
+        return this.status === QueueMessageStatus.Error;
     }
 
     get timeAfterError() {
@@ -38,15 +48,19 @@ class QueueMessage {
     }
 
     send() {
-        this.status = 1;
+        this.status = QueueMessageStatus.Sent;
+    }
+
+    waitingAck() {
+        this.status = QueueMessageStatus.WaitingACK;
     }
 
     finish() {
-        this.status = 2;
+        this.status = QueueMessageStatus.Finished;
     }
 
     setError() {
-        this.status = 3;
+        this.status = QueueMessageStatus.Error;
     }
 }
 

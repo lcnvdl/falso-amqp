@@ -94,6 +94,14 @@ class Queue {
     /**
      * @param {Channel[]} allChannels All the channels
      */
+    getAvailableQueueChannels(allChannels) {
+        let channels = this.getQueueChannels(allChannels);
+        return channels;
+    }
+
+    /**
+     * @param {Channel[]} allChannels All the channels
+     */
     hasOneOrMoreChannels(allChannels) {
         let channels = allChannels.some(m => m.isConsumming(this.name));
         return channels;
@@ -120,7 +128,7 @@ class Queue {
             return;
         }
 
-        let channels = this.getQueueChannels(allChannels);
+        let channels = this.getAvailableQueueChannels(allChannels);
 
         if (channels.length === 0) {
             return;

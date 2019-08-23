@@ -18,6 +18,7 @@ class Channel {
         this.exchanges = [];
         this.consuming = {};
         this.isClosed = false;
+        this.prefetchPerConsumer = 0;
     }
 
     /**
