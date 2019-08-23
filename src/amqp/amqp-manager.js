@@ -1,3 +1,5 @@
+/** @typedef {import("../sockets/socket-connection")} SocketConnection */
+
 const ExchangesFactory = require("../exchanges/factory");
 const Channel = require("./channel");
 const Message = require("./message");
@@ -49,24 +51,34 @@ class AmqpManager {
         channel.attachExchange(this.exchanges[name]);
     }
 
+    /**
+     * @param {Channel} channel Channel
+     * @param {string} name Name
+     * @param {*} settings Settings
+     * @returns {string} Queue name
+     */
     assertQueue(channel, name, settings) {
         if (!name || name === "") {
             name = "amq.get-" + uuid();
         }
 
-        if (this.queues[name]) {
-            this.queues[name].validate(settings);
+        /** @type {Queue} */
+        let queue = this.queues[name];
+
+        if (queue) {
+            queue.validate(settings);
         }
         else {
             this._createQueue(channel, name, settings);
         }
 
-        channel.attachQueue(this.queues[name]);
+        channel.attachQueue(queue);
 
         return name;
     }
 
     getQueueStatus(name) {
+        /** @type {Queue} */
         let queue = this.queues[name];
 
         return {
@@ -87,10 +99,23 @@ class AmqpManager {
         this.exchanges[exchangeName].publish(message, routingKey, relationships);
     }
 
+    /**
+     * @param {Function} sendMessageToChannel Function to send a message to a specific channel
+     */
     processQueues(sendMessageToChannel) {
         const allChannels = this.allChannels;
 
-        this.allQueues.forEach(queue => {
+        let toDelete = this.allQueues
+            .filter(m => m.shouldDeleteIfItsEmpty)
+            .filter(m => !m.hasOneOrMoreChannels(allChannels))
+            .filter(m => m.tryToKill())
+            .map(m => m.name);
+
+        toDelete.forEach(name => delete this.queues[name]);
+
+        this.allQueues.filter(m => m.hasOneOrMoreChannels(allChannels)).forEach(queue => {
+            queue.resetLives();
+
             let messages = queue.process(allChannels).filter(m => m.isPending);
 
             messages.forEach(queueMessage => {
@@ -120,6 +145,10 @@ class AmqpManager {
         this.publish("", queueName, messageContent, settings);
     }
 
+    /**
+     * @param {SocketConnection} client Socket client.
+     * @returns {Channel}
+     */
     createChannel(client) {
         const channel = new Channel(client);
         this.channels[channel.id] = channel;

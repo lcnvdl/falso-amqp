@@ -1,12 +1,14 @@
 /** @typedef {import("../amqp/channel")} Channel */
 /** @typedef {import("../amqp/amqp-manager")} Manager */
+/** @typedef {import("../sockets/socket-connection")} SocketConnection */
+/** @typedef {import("../protocols/protocol-v1")} ProtocolV1 */
 
 class MainController {
     /**
      * @param {Object} obj An object.
      * @param {Manager} obj.manager Manager
-     * @param {*} obj.connection Connection
-     * @param {*} obj.Protocol Protocol
+     * @param {SocketConnection} obj.connection Connection
+     * @param {ProtocolV1} obj.Protocol Protocol
      */
     constructor({ manager, connection, Protocol }) {
         this.connection = connection;

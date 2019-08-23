@@ -66,4 +66,78 @@ describe("AmqpManager", () => {
             }).to.throw(Error);
         });
     });
+
+    describe("process", () => {
+
+        /** @type {AmqpManager} */
+        let instance = null;
+
+        beforeEach(() => {
+            instance = new AmqpManager();
+        });
+
+        describe("without channels", () => {
+            it("process should work fine", () => {
+                instance.processQueues(() => { });
+            });
+        });
+
+        describe("with channels", () => {
+            let socketStub = {
+                close: () => socketClosed = true
+            };
+            let ch = null;
+
+            beforeEach(() => {
+                ch = instance.createChannel(socketStub);
+                instance.assertQueue(ch, "Q1", { autoDelete: true });
+            });
+
+            it("process should delete auto-delete empty queues after 10 tries", () => {
+                let i = 0;
+
+                while (i++ < 10 + 1) {
+                    let q = instance.allQueues[0];
+                    expect(q, "The queue must exists").to.be.ok;
+                    instance.processQueues(() => {});
+                }
+
+                expect(instance.allQueues.length).to.equal(0, "The queue still existing");
+            });
+
+            function sendMessageToChannel(channel, cmd, data) {
+            }
+        });
+    });
+
+    describe("closeChannel", () => {
+
+        /** @type {AmqpManager} */
+        let instance = null;
+        let socketClosed = false;
+        let socketStub = {
+            close: () => socketClosed = true
+        };
+
+        beforeEach(() => {
+            instance = new AmqpManager();
+            socketClosed = false;
+        });
+
+        it("should work fine", () => {
+            expect(instance.allChannels.some(m => m.id === channel.id)).to.be.false;
+
+            let channel = instance.createChannel(socketStub);
+
+            expect(channel).to.be.ok;
+            expect(instance.allChannels.some(m => m.id === channel.id)).to.be.true;
+            expect(channel.isClosed).to.be.false;
+            expect(socketClosed).to.be.false;
+
+            instance.closeChannel(channel.id);
+            expect(instance.allChannels.some(m => m.id === channel.id)).to.be.false;
+            expect(channel.isClosed, "Channel must be finished").to.be.true;
+            expect(socketClosed).to.be.true;
+        });
+    });
 });

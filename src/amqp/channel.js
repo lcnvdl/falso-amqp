@@ -1,9 +1,14 @@
 /** @typedef {import("../queues/queue")} Queue */
 /** @typedef {import("../exchanges/exchange")} Exchange */
+/** @typedef {import("../sockets/socket-connection")} SocketConnection */
 
 const uuid = require("uuid/v1");
 
 class Channel {
+
+    /**
+     * @param {SocketConnection} client Socket client.
+     */
     constructor(client) {
         this.id = uuid();
         this.client = client;

@@ -22,11 +22,21 @@ class Queue {
 
         this._rr = 0;
 
+        this._destroyCounter = 0;
+
         this.creator = "";
     }
 
     get countMessages() {
         return this._messages.length;
+    }
+
+    get shouldDeleteIfItsEmpty() {
+        return this.exclusive || this.autoDelete;
+    }
+
+    get isEmpty() {
+        return this.countMessages === 0;
     }
 
     initialize(name, settings) {
@@ -37,6 +47,14 @@ class Queue {
             .forEach(key => {
                 this[key] = settings[key];
             });
+    }
+
+    tryToKill() {
+        return ++this._destroyCounter > 10;
+    }
+
+    resetLives() {
+        this._destroyCounter = 0;
     }
 
     /**
@@ -63,6 +81,16 @@ class Queue {
         return this._messagesToDeliver;
     }
 
+    getQueueChannels(allChannels) {
+        let channels = allChannels.filter(m => m.isConsumming(this.name));
+        return channels;
+    }
+
+    hasOneOrMoreChannels(allChannels) {
+        let channels = allChannels.some(m => m.isConsumming(this.name));
+        return channels;
+    }
+
     _processMessagesToDeliver() {
 
         let finishedMessages = this._messagesToDeliver.filter(m => m.isInFinishedStatus);
@@ -78,12 +106,11 @@ class Queue {
     }
 
     _processPendingMessages(allChannels) {
-        if (this._messages.length === 0) {
+        if (this.isEmpty) {
             return;
         }
 
-        let channels = allChannels
-            .filter(m => m.isConsumming(this.name));
+        let channels = this.getQueueChannels(allChannels);
 
         if (channels.length === 0) {
             return;

@@ -26,7 +26,8 @@
   "scripts": {
     "serve": "node server.js",
     "test:mocha": "mocha",
-    "coverage": "nyc --reporter=text mocha -x json.helper.js",
+    "cv": "npm run coverage",
+    "coverage": "nyc --reporter=text -x **/**/json.helper.js -x **/**/*.test.js mocha",
     "tests": "mocha --watch --recursive",
     "test": "nyc --reporter=lcov mocha",
     "codecov": "codecov"
