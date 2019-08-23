@@ -81,6 +81,10 @@ class AmqpManager {
         /** @type {Queue} */
         let queue = this.queues[name];
 
+        if (!queue) {
+            return null;
+        }
+
         return {
             queue: name,
             messageCount: queue.countMessages,
