@@ -1,7 +1,7 @@
 const colog = require("colog");
 
 module.exports = {
-    logo() {
+    logo(version) {
         colog.log(" ");
         colog.log(colog.bgBlue("                    "));
         colog.log(colog.colorBlue(
@@ -10,7 +10,7 @@ module.exports = {
             colog.bgWhite("AMQP     ")));
         colog.log(colog.colorCyan(colog.bgBlue(" lucianorasente.com ")));
         colog.log(" ");
-        colog.log(colog.magenta("Version " + require("./package.json").version));
+        colog.log(colog.magenta("Version " + version));
         colog.log(" ");
     },
 

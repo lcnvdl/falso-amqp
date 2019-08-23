@@ -32,14 +32,14 @@ function runServer() {
             settings.processQueueInterval = +args[++i];
         }
         else if (arg === "--version" || arg === "-v") {
-            logo();
+            logo(require("./package.json").version);
             return;
         }
     }
 
     server.serve(settings.port).then(() => {
 
-        logo();
+        logo(require("./package.json").version);
 
         colog.success("Listening on port " + settings.port + " using " + server.name);
 
