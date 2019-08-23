@@ -6,6 +6,8 @@ Falso AMQP
 [![codecov][codecov-image]][codecov-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 
+> Node.js amqp-like server & cli
+
 # History
 I was working with microservices in Node JS. The MS nodes were connected using RabbitMQ. My life was happy, until I've tried to deploy my project to azure.
 That was when I realize that the thing is was not so easy.
