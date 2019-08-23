@@ -39,11 +39,9 @@ describe("AmqpManager", () => {
 
         /** @type {AmqpManager} */
         let instance = null;
-        let channelStub = null;
 
         beforeEach(() => {
             instance = new AmqpManager();
-            channelStub = { attachExchange: () => { } };
         });
 
         it("should return null if queue doesn't exists", () => {
@@ -108,14 +106,17 @@ describe("AmqpManager", () => {
         });
 
         describe("with channels", () => {
-            let socketStub = {
-                close: () => socketClosed = true
-            };
+
+            let socketClosed = false;
+            let socketStub = null;
             let ch = null;
 
             beforeEach(() => {
                 ch = instance.createChannel(socketStub);
                 instance.assertQueue(ch, "Q1", { autoDelete: true });
+                socketStub = {
+                    close: () => socketClosed = true
+                };
             });
 
             it("process should delete auto-delete empty queues after 10 tries", () => {

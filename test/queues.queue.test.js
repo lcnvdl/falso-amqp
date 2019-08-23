@@ -57,6 +57,7 @@ describe("Queue", () => {
         /** @type {Queue} */
         let queue = null;
         let message = null;
+        let message2 = null;
         let channel = null;
         let relation = { noAck: true };
         let exchange = null;

@@ -83,8 +83,14 @@ class Channel {
      * @param {boolean} [noAck] No ACK
      */
     consume(queueName, { noAck = true }) {
+
+        if (this.consuming[queueName]) {
+            throw new Error("The channel is already consumming the queue " + queueName);
+        }
+
         this.consuming[queueName] = {
-            noAck
+            noAck,
+            status: {}
         };
     }
 

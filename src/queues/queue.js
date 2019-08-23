@@ -1,3 +1,5 @@
+/** @typedef {import("../amqp/channel")} Channel */
+
 const QueueMessage = require("./queue-message");
 
 class Queue {
@@ -81,18 +83,23 @@ class Queue {
         return this._messagesToDeliver;
     }
 
+    /**
+     * @param {Channel[]} allChannels All the channels
+     */
     getQueueChannels(allChannels) {
         let channels = allChannels.filter(m => m.isConsumming(this.name));
         return channels;
     }
 
+    /**
+     * @param {Channel[]} allChannels All the channels
+     */
     hasOneOrMoreChannels(allChannels) {
         let channels = allChannels.some(m => m.isConsumming(this.name));
         return channels;
     }
 
     _processMessagesToDeliver() {
-
         let finishedMessages = this._messagesToDeliver.filter(m => m.isInFinishedStatus);
 
         finishedMessages.forEach(queueMsg => {
@@ -105,6 +112,9 @@ class Queue {
         this._messagesToDeliver = this._messagesToDeliver.filter(m => !m.shouldBeDestroyed);
     }
 
+    /**
+     * @param {Channel[]} allChannels All the channels
+     */
     _processPendingMessages(allChannels) {
         if (this.isEmpty) {
             return;
