@@ -69,7 +69,7 @@ class AmqpManager {
             queue.validate(settings);
         }
         else {
-            this._createQueue(channel, name, settings);
+            queue = this._createQueue(channel, name, settings);
         }
 
         channel.attachQueue(queue);
@@ -188,6 +188,7 @@ class AmqpManager {
         instance.initialize(name, settings);
         instance.creator = channel.id;
         this.queues[name] = instance;
+        return instance;
     }
 }
 
