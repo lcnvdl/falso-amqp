@@ -6,7 +6,10 @@ Falso AMQP - *Node.js amqp-like server & [client library](https://github.com/lcn
 [![codecov][codecov-image]][codecov-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H811YJA)
+# Support us
+- [![patreon](https://www.lucianorasente.com/images/become_a_patron.jpg)](https://patreon.com/luchodev)
+or
+- [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/H2H811YJA)
 
 # History
 I was working with microservices in Node JS. The MS nodes were connected using RabbitMQ. My life was happy, until I've tried to deploy my project to azure.
