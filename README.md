@@ -1,10 +1,13 @@
 # falso-amqp
+
 Falso AMQP - *Node.js amqp-like server & [client library](https://github.com/lcnvdl/falso-amqp-client)*
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![codecov][codecov-image]][codecov-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
+
+### Falso AMQP is a AMQP-like server for Node.js. It client library is designed to be used exactly like *amqplib* with *rabbitmq*.
 
 # Support us
 - [![patreon](https://www.lucianorasente.com/images/become_a_patron.jpg)](https://patreon.com/luchodev)
@@ -43,7 +46,7 @@ npm i falso-amqp --save
 2. Require
 ```javascript
 const runServer = require("falso-amqp");
-
+ 
 runServer();
 ```
 
