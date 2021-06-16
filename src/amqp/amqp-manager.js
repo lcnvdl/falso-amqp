@@ -176,7 +176,7 @@ class AmqpManager {
             this.channels[id].close();
         }
         catch (err) {
-            console.warn(err);
+            // console.warn(err);
         }
 
         delete this.channels[id];

@@ -21,6 +21,12 @@ describe("QueueMessage", () => {
         });
     });
 
+    describe("needsAck", () => {
+        it("should be false by default", () => {
+            expect(instance.needsAck).to.be.false;
+        });
+    });
+
     describe("setError", () => {
         it("should work fine", () => {
             expect(instance.isPending).to.be.true;

@@ -11,7 +11,7 @@ class QueueMessage {
     }
 
     get needsAck() {
-        return !this.relationship.noAck;
+        return !!this.relationship && !this.relationship.noAck;
     }
 
     get isPending() {

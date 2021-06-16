@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 
 const AmqpManager = require("../src/amqp/amqp-manager");
+const Channel = require("../src/amqp/channel");
 
 describe("AmqpManager", () => {
     describe("constructor", () => {
@@ -9,8 +10,53 @@ describe("AmqpManager", () => {
         });
     });
 
-    describe("assertQueue", () => {
+    describe("assertDefaultExchange", () => {
+        /** @type {AmqpManager} */
+        let instance = null;
+        let channelStub = null;
+        let attachedExchange = null;
 
+        beforeEach(() => {
+            attachedExchange = null;
+            instance = new AmqpManager();
+            channelStub = {
+                attachExchange: (_exchange) => {
+                    attachedExchange = _exchange;
+                }
+            };
+        });
+
+        it("should register a direct exchange without name by default", () => {
+            const settings = {};
+            instance.assertDefaultExchange(channelStub, settings);
+            expect(attachedExchange).to.be.ok;
+            expect(attachedExchange.name).to.eq("");
+        });
+    });
+
+    describe("destroyQueue", () => {
+        /** @type {AmqpManager} */
+        let instance = null;
+        let channelStub = null;
+
+        beforeEach(() => {
+            instance = new AmqpManager();
+            channelStub = new Channel();
+        });
+
+        it("should work fine if queue doesn't exists", () => {
+            instance.destroyQueue("xyz");
+        });
+
+        it("should work fine if the queue exists", () => {
+            instance.assertQueue(channelStub, "qtest", {});
+            expect(instance.getQueueStatus("qtest")).to.be.ok;
+            instance.destroyQueue("qtest");
+            expect(instance.getQueueStatus("qtest")).to.be.null;
+        });
+    });
+
+    describe("assertQueue", () => {
         /** @type {AmqpManager} */
         let instance = null;
         let channelStub = null;
@@ -125,19 +171,15 @@ describe("AmqpManager", () => {
                 while (i++ < 10 + 1) {
                     let q = instance.allQueues[0];
                     expect(q, "The queue must exists").to.be.ok;
-                    instance.processQueues(() => {});
+                    instance.processQueues(() => { });
                 }
 
                 expect(instance.allQueues.length).to.equal(0, "The queue still existing");
             });
-
-            function sendMessageToChannel(channel, cmd, data) {
-            }
         });
     });
 
     describe("closeChannel", () => {
-
         /** @type {AmqpManager} */
         let instance = null;
         let socketClosed = false;
@@ -145,9 +187,23 @@ describe("AmqpManager", () => {
             close: () => socketClosed = true
         };
 
+        let withExceptionStub = {
+            close: () => {
+                throw new Error("Test");
+            }
+        };
+
         beforeEach(() => {
             instance = new AmqpManager();
             socketClosed = false;
+        });
+
+        it("closing existing channel should ignore close errors", () => {
+            let channel = instance.createChannel(withExceptionStub);
+            expect(instance.allChannels.some(m => m.id === channel.id)).to.be.true;
+
+            instance.closeChannel(channel.id);
+            expect(instance.allChannels.some(m => m.id === channel.id)).to.be.false;
         });
 
         it("closing existing channel should work fine", () => {
@@ -170,7 +226,7 @@ describe("AmqpManager", () => {
             expect(channel.isClosed).to.be.false;
             expect(socketClosed).to.be.false;
 
-            instance.closeChannel(channel.id+"1");
+            instance.closeChannel(channel.id + "1");
             expect(instance.allChannels.some(m => m.id === channel.id)).to.be.true;
             expect(channel.isClosed, "Channel must NOT be finished").to.be.false;
             expect(socketClosed).to.be.false;
