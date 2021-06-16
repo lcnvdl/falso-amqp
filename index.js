@@ -38,7 +38,6 @@ function runServer() {
     }
 
     server.serve(settings.port).then(() => {
-
         logo(require("./package.json").version);
 
         colog.success("Listening on port " + settings.port + " using " + server.name);
@@ -46,6 +45,7 @@ function runServer() {
         let manager = new Manager();
 
         server.onConnection(connection => {
+            colog.info("New connection");
             let controller = new MainController({ manager, connection, Protocol });
 
             connection.onMessage(msg => {
